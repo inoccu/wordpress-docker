@@ -40,6 +40,7 @@ services:
     env_file: .env
     volumes:
       - ./public:/html
+      - ./movefile.yml:/root/movefile.yml
       - ~/.ssh:/root/.ssh
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
