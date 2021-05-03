@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:5.7
+    command:
+      - "--character-set-server=utf8"
+      - "--collation-server=utf8_unicode_ci"
+    container_name: ${NAME}_db
+    volumes:
+      - db_data:/var/lib/mysql
+    env_file: .env
+    ports:
+      - "13306:3306"
+  wordpress:
+    #image: wordpress:latest
+    build: .
+    container_name: ${NAME}_wp
+    ports:
+      - "80:80"
+    depends_on:
+      - mysql
+    env_file: .env
+    volumes:
+      - ./public:/var/www/html
+  wordmove:
+    image: welaika/wordmove
+    container_name: ${NAME}_wordmove
+    tty: true
+    depends_on:
+      - wordpress
+    env_file: .env
+    volumes:
+      - ./public:/html
+      - ~/.ssh:/root/.ssh
+
+volumes:
+  db_data:
+    name: ${NAME}_data
+    driver: local
